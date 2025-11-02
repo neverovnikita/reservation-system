@@ -1,4 +1,4 @@
-package com.neverov.reservationsystem;
+package com.neverov.reservationsystem.web;
 
 import java.time.LocalDateTime;
 

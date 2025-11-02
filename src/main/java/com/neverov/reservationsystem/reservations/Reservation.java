@@ -1,4 +1,4 @@
-package com.neverov.reservationsystem;
+package com.neverov.reservationsystem.reservations;
 
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;

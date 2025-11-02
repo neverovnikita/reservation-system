@@ -1,11 +1,12 @@
-package com.neverov.reservationsystem;
+package com.neverov.reservationsystem.reservations;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Null;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -39,11 +41,21 @@ public class ReservationController {
 				.body(reservationService.getReservationById(id));
 	}
 	@GetMapping
-	public ResponseEntity<List<Reservation>> getAllReservations() {
+	public ResponseEntity<List<Reservation>> getAllReservations(
+			@RequestParam(name = "roomId", required = false) Long roomId,
+			@RequestParam(name = "userId", required = false) Long userId,
+			@RequestParam(name = "pageSize", required = false) Integer pageSize,
+			@RequestParam(name = "pageNumber", required = false) Integer pageNumber
+	) {
 		log.info("Called getAllReservations");
-
+		var filter = new ReservationSearchFilter(
+				roomId,
+				userId,
+				pageSize,
+				pageNumber
+		);
 		return ResponseEntity.status(HttpStatus.OK)
-				.body(reservationService.findAllReservations());
+				.body(reservationService.searchAllByFilter(filter));
 	}
 
 	@PostMapping
